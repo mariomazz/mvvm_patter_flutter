@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mvvm_patter_flutter/src/features/todos/application/todos_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../model/todo_dto.dart';
@@ -6,18 +5,42 @@ part 'todos_screen_controller.g.dart';
 
 @Riverpod()
 class TodosScreenController extends _$TodosScreenController {
-  late final _service = ref.watch(todosServiceProvider);
-
-  AsyncValue<Todos> getAsyncTodos(WidgetRef ref) {
-    return ref.watch(todosProvider);
-  }
+  late final _serviceNotifier = ref.watch(todosServiceProvider.notifier);
 
   @override
-  Future<void> build() async {
-    return await _service.loadTodos();
+  TodosScreenControllerState build() {
+    _initialize();
+    reloadTodos();
+    return TodosScreenControllerState.loading();
   }
 
-  Future<void> reloadTodos() async {
-    return await _service.loadTodos();
+  Future<void> reloadTodos(
+      {Map<String, dynamic> queryParameters = const {}}) async {
+    return await _serviceNotifier.loadTodos(queryParameters: queryParameters);
+  }
+
+  void _initialize() async {
+    ref.listen(todosServiceProvider, (oldState, newState) {
+      state = state.copyWith(todos: newState.todos);
+    });
+  }
+}
+
+class TodosScreenControllerState {
+  final AsyncValue<Todos> todos;
+  TodosScreenControllerState({
+    required this.todos,
+  });
+
+  factory TodosScreenControllerState.loading() {
+    return TodosScreenControllerState(todos: const AsyncValue.loading());
+  }
+
+  TodosScreenControllerState copyWith({
+    AsyncValue<Todos>? todos,
+  }) {
+    return TodosScreenControllerState(
+      todos: todos ?? this.todos,
+    );
   }
 }

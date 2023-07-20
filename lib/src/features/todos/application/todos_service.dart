@@ -1,53 +1,53 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../common/utils/in_memory_store.dart';
+
 import '../data/todos_repository.dart';
 import '../model/todo_dto.dart';
+
 part 'todos_service.g.dart';
 
-class TodosService {
-  final ITodosRepository todosRepo;
-  TodosService({required this.todosRepo});
-
-  final _todos = InMemoryStore<Todos>(null);
-  final _todo = InMemoryStore<Todo>(null);
-
-  Stream<Todos?> getTodos() {
-    return _todos.stream;
-  }
-
-  Stream<Todo?> getTodo() {
-    return _todo.stream;
-  }
+@Riverpod()
+class TodosService extends _$TodosService {
+  late final _repo = ref.read(todosRepositoryProvider);
+  @override
+  TodosServiceState build() => TodosServiceState.loading();
 
   Future<void> loadTodos(
       {Map<String, dynamic> queryParameters = const {}}) async {
-    _todos.value = null;
-    final a = await todosRepo.getTodos(queryParameters: queryParameters);
-    _todos.value = a;
+    state = state.copyWith(
+        todos: await AsyncValue.guard(() async =>
+            await _repo.getTodos(queryParameters: queryParameters)));
   }
 
   Future<void> loadTodo(int todoId,
       {Map<String, dynamic> queryParameters = const {}}) async {
-    _todo.value = null;
-    final a = await todosRepo.getTodo(todoId, queryParameters: queryParameters);
-    _todo.value = a;
+    state = state.copyWith(
+        todo: await AsyncValue.guard(() async =>
+            await _repo.getTodo(todoId, queryParameters: queryParameters)));
   }
 }
 
-@Riverpod()
-TodosService todosService(TodosServiceRef ref) {
-  final repo = ref.watch(todosRepositoryProvider);
-  return TodosService(todosRepo: repo);
-}
+class TodosServiceState {
+  final AsyncValue<Todo> todo;
+  final AsyncValue<Todos> todos;
+  TodosServiceState({
+    required this.todo,
+    required this.todos,
+  });
 
-@Riverpod()
-Stream<Todos> todos(TodosRef ref) {
-  final repo = ref.watch(todosServiceProvider);
-  return repo.getTodos().where((todos) => todos != null).cast<Todos>();
-}
+  factory TodosServiceState.loading() {
+    return TodosServiceState(
+      todo: const AsyncValue.loading(),
+      todos: const AsyncValue.loading(),
+    );
+  }
 
-@Riverpod()
-Stream<Todo> todo(TodoRef ref) {
-  final repo = ref.watch(todosServiceProvider);
-  return repo.getTodo().where((todo) => todo != null).cast<Todo>();
+  TodosServiceState copyWith({
+    AsyncValue<Todo>? todo,
+    AsyncValue<Todos>? todos,
+  }) {
+    return TodosServiceState(
+      todo: todo ?? this.todo,
+      todos: todos ?? this.todos,
+    );
+  }
 }

@@ -7,7 +7,7 @@ part of 'todo_screen_controller.dart';
 // **************************************************************************
 
 String _$todoScreenControllerHash() =>
-    r'68420718958108df9bb159005b87386a7387f246';
+    r'a1f615fc67d00dec9caae24da84c483ad5d6df20';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,10 +31,10 @@ class _SystemHash {
 }
 
 abstract class _$TodoScreenController
-    extends BuildlessAutoDisposeAsyncNotifier<void> {
+    extends BuildlessAutoDisposeNotifier<TodoScreenControllerState> {
   late final int todoId;
 
-  Future<void> build(
+  TodoScreenControllerState build(
     int todoId,
   );
 }
@@ -44,7 +44,7 @@ abstract class _$TodoScreenController
 const todoScreenControllerProvider = TodoScreenControllerFamily();
 
 /// See also [TodoScreenController].
-class TodoScreenControllerFamily extends Family<AsyncValue<void>> {
+class TodoScreenControllerFamily extends Family<TodoScreenControllerState> {
   /// See also [TodoScreenController].
   const TodoScreenControllerFamily();
 
@@ -82,8 +82,8 @@ class TodoScreenControllerFamily extends Family<AsyncValue<void>> {
 }
 
 /// See also [TodoScreenController].
-class TodoScreenControllerProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<TodoScreenController, void> {
+class TodoScreenControllerProvider extends AutoDisposeNotifierProviderImpl<
+    TodoScreenController, TodoScreenControllerState> {
   /// See also [TodoScreenController].
   TodoScreenControllerProvider(
     this.todoId,
@@ -116,7 +116,7 @@ class TodoScreenControllerProvider
   }
 
   @override
-  Future<void> runNotifierBuild(
+  TodoScreenControllerState runNotifierBuild(
     covariant TodoScreenController notifier,
   ) {
     return notifier.build(

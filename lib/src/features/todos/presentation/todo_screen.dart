@@ -11,10 +11,13 @@ class TodoScreen extends ConsumerStatefulWidget {
 }
 
 class _TodoScreenState extends ConsumerState<TodoScreen> {
+  late final todoController = (todoScreenControllerProvider(widget.todoId));
+
   @override
   Widget build(BuildContext context) {
-    final todoViewController =
-        ref.watch(todoScreenControllerProvider(widget.todoId).notifier);
+    final todoControllerNotifier = ref.read(todoController.notifier);
+
+    final controllerValue = ref.watch(todoController);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -22,23 +25,25 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
         actions: [
           IconButton(
             onPressed: () async =>
-                await todoViewController.reloadTodo(widget.todoId),
+                await todoControllerNotifier.reloadTodo(widget.todoId),
             icon: const Icon(Icons.refresh),
           ),
         ],
       ),
-      body: todoViewController.getAsyncTodo(ref).when(
-            data: (todo) => Center(
-              child: ListTile(
-                leading: Text("Id ${todo.id}"),
-                title: Text("Titolo : ${todo.title}"),
-                trailing: Text("Id Utente : ${todo.userId}"),
-                subtitle: Text("Completato : ${todo.completed}"),
-              ),
+      body: controllerValue.todo.when(
+        data: (todo) {
+          return Center(
+            child: ListTile(
+              leading: Text("Id ${todo.id}"),
+              title: Text("Titolo : ${todo.title}"),
+              trailing: Text("Id Utente : ${todo.userId}"),
+              subtitle: Text("Completato : ${todo.completed}"),
             ),
-            error: (err, stacktrace) => const SizedBox.shrink(),
-            loading: () => const Center(child: CircularProgressIndicator()),
-          ),
+          );
+        },
+        error: (err, stacktrace) => const SizedBox.shrink(),
+        loading: () => const Center(child: CircularProgressIndicator()),
+      ),
     );
   }
 }

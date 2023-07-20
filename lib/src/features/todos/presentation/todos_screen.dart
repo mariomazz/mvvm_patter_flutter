@@ -14,37 +14,41 @@ class TodosScreen extends ConsumerStatefulWidget {
 class _TodosScreenState extends ConsumerState<TodosScreen> {
   @override
   Widget build(BuildContext context) {
-    final todosViewController =
-        ref.watch(todosScreenControllerProvider.notifier);
+    final todosControllerNotifier =
+        ref.read(todosScreenControllerProvider.notifier);
+    final todosController = ref.watch(todosScreenControllerProvider);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("todos"),
       ),
-      body: todosViewController.getAsyncTodos(ref).when(
-            data: (todos) => SizedBox.expand(
-              child: RefreshIndicator(
-                onRefresh: () async => await todosViewController.reloadTodos(),
-                child: ListView.builder(
-                  itemCount: todos.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final todo = todos.elementAt(index);
-                    return ListTile(
-                      onTap: () => ref
-                          .read(goRouterProvider)
-                          .go("$todosRoute/${todo.id}"),
-                      leading: Text("Id ${todo.id}"),
-                      title: Text("Titolo : ${todo.title}"),
-                      trailing: Text("Id Utente : ${todo.userId}"),
-                      subtitle: Text("Completato : ${todo.completed}"),
-                    );
-                  },
-                ),
+      body: todosController.todos.when(
+        data: (todos) {
+          return SizedBox.expand(
+            child: RefreshIndicator(
+              onRefresh: () async =>
+                  await todosControllerNotifier.reloadTodos(),
+              child: ListView.builder(
+                itemCount: todos.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final todo = todos.elementAt(index);
+                  return ListTile(
+                    onTap: () =>
+                        ref.read(goRouterProvider).go("$todosRoute/${todo.id}"),
+                    leading: Text("Id ${todo.id}"),
+                    title: Text("Titolo : ${todo.title}"),
+                    trailing: Text("Id Utente : ${todo.userId}"),
+                    subtitle: Text("Completato : ${todo.completed}"),
+                  );
+                },
               ),
             ),
-            error: (err, stacktrace) => const SizedBox.shrink(),
-            loading: () => const Center(child: CircularProgressIndicator()),
-          ),
+          );
+        },
+        error: (err, stacktrace) => const SizedBox.shrink(),
+        loading: () => const Center(child: CircularProgressIndicator()),
+      ),
     );
   }
 }
