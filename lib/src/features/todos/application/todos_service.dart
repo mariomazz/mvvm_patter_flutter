@@ -1,8 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import '../data/todos_repository.dart';
 import '../model/todo_dto.dart';
-
 part 'todos_service.g.dart';
 
 @Riverpod()
