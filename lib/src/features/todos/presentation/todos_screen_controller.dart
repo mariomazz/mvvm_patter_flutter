@@ -20,8 +20,8 @@ class TodosScreenController extends _$TodosScreenController {
   }
 
   void _initialize() async {
-    ref.listen(todosServiceProvider, (oldState, newState) {
-      state = state.copyWith(todos: newState.todos);
+    ref.listen(todosServiceProvider, (o, n) {
+      state = state.copyWith(todos: n.todos);
     });
   }
 }

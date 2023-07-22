@@ -21,10 +21,9 @@ class TodoScreenController extends _$TodoScreenController {
   }
 
   void _initialize() async {
-    ref.listen(todosServiceProvider, (oldState, newState) {
-      state = state.copyWith(todo: newState.todo);
+    ref.listen(todosServiceProvider, (o, n) {
+      state = state.copyWith(todo: n.todo);
     });
-    ref.onDispose(() {});
   }
 }
 
