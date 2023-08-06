@@ -20,6 +20,9 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
       ref.read(todosScreenControllerProvider.notifier);
   @override
   void initState() {
+    _todosControllerNotifier.onError = (err) {
+      _todosPagingController.error=err.toString();
+    };
     _todosControllerNotifier.onPaginationRefresh = () {
       _todosPagingController.refresh();
     };
@@ -27,7 +30,7 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
       _todosPagingController.appendPage(todos, nextKey);
     };
     _todosPagingController.addPageRequestListener((pageKey) {
-      _todosControllerNotifier.onScrollListTodos(pageKey);
+      _todosControllerNotifier.onPaginationStart(pageKey);
     });
 
     super.initState();
@@ -74,7 +77,8 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
           ),
           Expanded(
             child: RefreshIndicator(
-              onRefresh: () => _todosControllerNotifier.onActivatePullToRefresh(),
+              onRefresh: () =>
+                  _todosControllerNotifier.onActivatePullToRefresh(),
               child: PagedListView<int, Todo>.separated(
                 pagingController: _todosPagingController,
                 builderDelegate: PagedChildBuilderDelegate<Todo>(

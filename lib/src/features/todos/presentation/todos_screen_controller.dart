@@ -7,19 +7,20 @@ part 'todos_screen_controller.g.dart';
 @Riverpod()
 class TodosScreenController extends _$TodosScreenController {
   late final _serviceNotifier = ref.watch(todosServiceProvider.notifier);
-  final _queryParametersKeys = {
-    "search": "q",
-    "ascending": "_sort",
-    "orderBy": "_order",
-    "itemsPerPage": "_limit",
-    "page": "_page",
-  };
+
+  final _querySearchKey = "q";
+  final _querySortKey = "_sort";
+  final _queryOrderKey = "_order";
+  // pagination
+  final _queryPageKey = "_page";
+  final _queryItemsPerPageKey = "_limit";
   final _todosTitleOrderKey = "title";
   String _todosSearchString = "";
   final int _todosPaginationItemsPerPage = 10;
 
   void Function(Todos todos, int? nextKey) onPaginationTodos = (_, __) {};
   void Function() onPaginationRefresh = () {};
+  void Function(Object) onError = (err) {};
 
   late final _todosSerchLimiter = SearchLimiter<void>(
     fetch: (text) async {
@@ -43,17 +44,16 @@ class TodosScreenController extends _$TodosScreenController {
     onPaginationRefresh();
   }
 
-  void onScrollListTodos(int pageKey) async {
+  void onPaginationStart(int pageKey) async {
     final query = {
-      _queryParametersKeys["itemsPerPage"]!: _todosPaginationItemsPerPage,
-      _queryParametersKeys["page"]!: pageKey,
-      _queryParametersKeys["orderBy"]!: _todosTitleOrderKey,
-      _queryParametersKeys["ascending"]!:
-          state.todosOrderAscending ? "asc" : "desc",
+      _queryItemsPerPageKey: _todosPaginationItemsPerPage,
+      _queryPageKey: pageKey,
+      _queryOrderKey: _todosTitleOrderKey,
+      _querySortKey: state.todosOrderAscending ? "asc" : "desc",
     };
 
     if (_todosSearchString.isNotEmpty) {
-      query.addAll({_queryParametersKeys["search"]!: _todosSearchString});
+      query.addAll({_querySearchKey: _todosSearchString});
     }
 
     final newItems = await _loadTodos(queryParameters: query);
@@ -66,7 +66,7 @@ class TodosScreenController extends _$TodosScreenController {
     }
   }
 
-  Future<void> onActivatePullToRefresh()async{
+  Future<void> onActivatePullToRefresh() async {
     return await Future.sync(() => onPaginationRefresh());
   }
 
@@ -79,6 +79,11 @@ class TodosScreenController extends _$TodosScreenController {
   void _initialize() async {
     ref.listen(todosServiceProvider, (o, n) {
       state = state.copyWith(todos: n.todos);
+      if (n.todos.error != null) {
+        onError(n.todos.error!);
+      }
+    }, onError: (err, s) {
+      onError(err);
     });
   }
 }
