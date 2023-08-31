@@ -7,7 +7,7 @@ part of 'todos_screen_controller.dart';
 // **************************************************************************
 
 String _$todosScreenControllerHash() =>
-    r'722a144fc8a29c7ea8c466bd3b1928f1c378f4ee';
+    r'de428495a8c9c074bcf00bd4261e30144002dc25';
 
 /// See also [TodosScreenController].
 @ProviderFor(TodosScreenController)

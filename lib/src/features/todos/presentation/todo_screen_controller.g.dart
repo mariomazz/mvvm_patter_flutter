@@ -7,7 +7,7 @@ part of 'todo_screen_controller.dart';
 // **************************************************************************
 
 String _$todoScreenControllerHash() =>
-    r'021b53dfec1307756e99b452854fe8e15361e311';
+    r'59248c7806885f7d8f08c8ece641af79474cb1e2';
 
 /// Copied from Dart SDK
 class _SystemHash {
