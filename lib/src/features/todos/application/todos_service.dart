@@ -3,7 +3,7 @@ import '../data/todos_repository.dart';
 import '../model/todo_dto.dart';
 part 'todos_service.g.dart';
 
-@Riverpod()
+@Riverpod(keepAlive: true)
 class TodosService extends _$TodosService {
   late final _repo = ref.read(todosRepositoryProvider);
   @override
@@ -12,15 +12,18 @@ class TodosService extends _$TodosService {
   Future<void> loadTodos(
       {Map<String, dynamic> queryParameters = const {}}) async {
     state = state.copyWith(
-        todos: await AsyncValue.guard(() async =>
-            await _repo.getTodos(queryParameters: queryParameters)));
+        todos: await AsyncValue.guard(() async => await _repo
+            .getTodos(queryParameters: queryParameters)
+            .then((r) =>
+                List.from(r.data).map((e) => Todo.fromJson(e)).toList())));
   }
 
   Future<void> loadTodo(int todoId,
       {Map<String, dynamic> queryParameters = const {}}) async {
     state = state.copyWith(
-        todo: await AsyncValue.guard(() async =>
-            await _repo.getTodo(todoId, queryParameters: queryParameters)));
+        todo: await AsyncValue.guard(() async => await _repo
+            .getTodo(todoId, queryParameters: queryParameters)
+            .then((r) => Todo.fromJson(r.data))));
   }
 }
 

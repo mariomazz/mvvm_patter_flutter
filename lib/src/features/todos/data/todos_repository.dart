@@ -1,13 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../common/widgets/constants.dart';
-import '../model/todo_dto.dart';
 part 'todos_repository.g.dart';
 
 abstract class ITodosRepository {
-  Future<List<Todo>> getTodos(
-      {Map<String, dynamic> queryParameters = const {}});
-  Future<Todo> getTodo(int todoId,
+  Future<Response> getTodos({Map<String, dynamic> queryParameters = const {}});
+  Future<Response> getTodo(int todoId,
       {Map<String, dynamic> queryParameters = const {}});
 }
 
@@ -18,22 +16,19 @@ class TodosRepository implements ITodosRepository {
   });
 
   @override
-  Future<Todo> getTodo(int todoId,
-      {Map<String, dynamic> queryParameters = const {}}) {
-    return client
-        .get("todos/$todoId", queryParameters: queryParameters)
-        .then(((res) => Todo.fromJson(res.data)));
+  Future<Response> getTodo(int todoId,
+      {Map<String, dynamic> queryParameters = const {}}) async {
+    return client.get("todos/$todoId", queryParameters: queryParameters);
   }
 
   @override
-  Future<List<Todo>> getTodos(
-      {Map<String, dynamic> queryParameters = const {}}) {
-    return client.get("todos", queryParameters: queryParameters).then(
-        ((res) => List.from(res.data).map((e) => Todo.fromJson(e)).toList()));
+  Future<Response> getTodos(
+      {Map<String, dynamic> queryParameters = const {}}) async {
+    return client.get("todos", queryParameters: queryParameters);
   }
 }
 
-@Riverpod(keepAlive: false)
+@Riverpod(keepAlive: true)
 ITodosRepository todosRepository(TodosRepositoryRef ref) {
   final baseOptions = BaseOptions(
     baseUrl: jsonPlaceholderApiBaseUrl,

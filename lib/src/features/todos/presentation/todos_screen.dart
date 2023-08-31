@@ -21,7 +21,7 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
   @override
   void initState() {
     _todosControllerNotifier.onError = (err) {
-      _todosPagingController.error=err.toString();
+      _todosPagingController.error = err.toString();
     };
     _todosControllerNotifier.onPaginationRefresh = () {
       _todosPagingController.refresh();

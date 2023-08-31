@@ -6,12 +6,12 @@ part of 'todos_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$todosServiceHash() => r'aa4882dba887216e453e1223887f12e4636e3424';
+String _$todosServiceHash() => r'bc3afeac11c75e69cbec0ebeeea874960060a60c';
 
 /// See also [TodosService].
 @ProviderFor(TodosService)
 final todosServiceProvider =
-    AutoDisposeNotifierProvider<TodosService, TodosServiceState>.internal(
+    NotifierProvider<TodosService, TodosServiceState>.internal(
   TodosService.new,
   name: r'todosServiceProvider',
   debugGetCreateSourceHash:
@@ -20,5 +20,6 @@ final todosServiceProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$TodosService = AutoDisposeNotifier<TodosServiceState>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+typedef _$TodosService = Notifier<TodosServiceState>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

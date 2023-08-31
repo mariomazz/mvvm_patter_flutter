@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:mvvm_patter_flutter/src/features/todos/application/todos_service.dart';
 import '../model/todo_dto.dart';
@@ -5,24 +6,33 @@ part 'todo_screen_controller.g.dart';
 
 @Riverpod()
 class TodoScreenController extends _$TodoScreenController {
-  late final _serviceNotifier = ref.read(todosServiceProvider.notifier);
-
+  late final _service = ref.read(todosServiceProvider.notifier);
+  final _subscriptions = <ProviderSubscription>[];
   @override
   TodoScreenControllerState build(int todoId) {
     _initialize();
-    reloadTodo(todoId);
+    _disposing();
+    _service.loadTodo(todoId, queryParameters: {});
     return TodoScreenControllerState.loading();
   }
 
-  Future<void> reloadTodo(int todoId,
-      {Map<String, dynamic> queryParameters = const {}}) async {
-    return await _serviceNotifier.loadTodo(todoId,
-        queryParameters: queryParameters);
+  void onTapRefreshTodoButton() {
+    _service.loadTodo(todoId, queryParameters: {});
   }
 
   void _initialize() async {
-    ref.listen(todosServiceProvider, (o, n) {
-      state = state.copyWith(todo: n.todo);
+    final s1 =
+        ref.listen(todosServiceProvider.select((value) => value.todo), (o, n) {
+      state = state.copyWith(todo: n);
+    });
+    _subscriptions.addAll([s1]);
+  }
+
+  void _disposing() {
+    ref.onDispose(() {
+      for (var sub in _subscriptions) {
+        sub.close();
+      }
     });
   }
 }

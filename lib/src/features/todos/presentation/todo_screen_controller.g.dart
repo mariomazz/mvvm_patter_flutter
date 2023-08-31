@@ -7,7 +7,7 @@ part of 'todo_screen_controller.dart';
 // **************************************************************************
 
 String _$todoScreenControllerHash() =>
-    r'a1f615fc67d00dec9caae24da84c483ad5d6df20';
+    r'021b53dfec1307756e99b452854fe8e15361e311';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -86,8 +86,8 @@ class TodoScreenControllerProvider extends AutoDisposeNotifierProviderImpl<
     TodoScreenController, TodoScreenControllerState> {
   /// See also [TodoScreenController].
   TodoScreenControllerProvider(
-    this.todoId,
-  ) : super.internal(
+    int todoId,
+  ) : this._internal(
           () => TodoScreenController()..todoId = todoId,
           from: todoScreenControllerProvider,
           name: r'todoScreenControllerProvider',
@@ -98,9 +98,51 @@ class TodoScreenControllerProvider extends AutoDisposeNotifierProviderImpl<
           dependencies: TodoScreenControllerFamily._dependencies,
           allTransitiveDependencies:
               TodoScreenControllerFamily._allTransitiveDependencies,
+          todoId: todoId,
         );
 
+  TodoScreenControllerProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.todoId,
+  }) : super.internal();
+
   final int todoId;
+
+  @override
+  TodoScreenControllerState runNotifierBuild(
+    covariant TodoScreenController notifier,
+  ) {
+    return notifier.build(
+      todoId,
+    );
+  }
+
+  @override
+  Override overrideWith(TodoScreenController Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: TodoScreenControllerProvider._internal(
+        () => create()..todoId = todoId,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        todoId: todoId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeNotifierProviderElement<TodoScreenController,
+      TodoScreenControllerState> createElement() {
+    return _TodoScreenControllerProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -114,14 +156,21 @@ class TodoScreenControllerProvider extends AutoDisposeNotifierProviderImpl<
 
     return _SystemHash.finish(hash);
   }
+}
+
+mixin TodoScreenControllerRef
+    on AutoDisposeNotifierProviderRef<TodoScreenControllerState> {
+  /// The parameter `todoId` of this provider.
+  int get todoId;
+}
+
+class _TodoScreenControllerProviderElement
+    extends AutoDisposeNotifierProviderElement<TodoScreenController,
+        TodoScreenControllerState> with TodoScreenControllerRef {
+  _TodoScreenControllerProviderElement(super.provider);
 
   @override
-  TodoScreenControllerState runNotifierBuild(
-    covariant TodoScreenController notifier,
-  ) {
-    return notifier.build(
-      todoId,
-    );
-  }
+  int get todoId => (origin as TodoScreenControllerProvider).todoId;
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

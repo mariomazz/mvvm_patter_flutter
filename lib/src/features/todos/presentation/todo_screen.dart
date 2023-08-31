@@ -24,8 +24,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
         title: Text("todo ${widget.todoId}"),
         actions: [
           IconButton(
-            onPressed: () async =>
-                await todoControllerNotifier.reloadTodo(widget.todoId),
+            onPressed: todoControllerNotifier.onTapRefreshTodoButton,
             icon: const Icon(Icons.refresh),
           ),
         ],
@@ -41,7 +40,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
             ),
           );
         },
-        error: (err, stacktrace) => const SizedBox.shrink(),
+        error: (err, stacktrace) => Center(child: Text(err.toString())),
         loading: () => const Center(child: CircularProgressIndicator()),
       ),
     );
