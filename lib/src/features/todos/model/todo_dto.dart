@@ -14,4 +14,6 @@ class Todo with _$Todo {
   factory Todo.fromJson(Map<String, dynamic> json) => _$TodoFromJson(json);
 }
 
+Todos todosFromList(List list) => list.map((e) => Todo.fromJson(e)).toList();
+
 typedef Todos = List<Todo>;
