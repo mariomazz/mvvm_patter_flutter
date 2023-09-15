@@ -6,7 +6,7 @@ part of 'todos_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$todosServiceHash() => r'bc3afeac11c75e69cbec0ebeeea874960060a60c';
+String _$todosServiceHash() => r'002d48e75d9e1f88f0d5441fcd098ef2c7d0e1eb';
 
 /// See also [TodosService].
 @ProviderFor(TodosService)
@@ -22,4 +22,4 @@ final todosServiceProvider =
 
 typedef _$TodosService = Notifier<TodosServiceState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

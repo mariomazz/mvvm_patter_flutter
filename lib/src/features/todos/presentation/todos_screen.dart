@@ -4,7 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:mvvm_patter_flutter/src/features/todos/presentation/todos_screen_controller.dart';
 import 'package:mvvm_patter_flutter/src/routing/routes.dart';
 import 'package:mvvm_patter_flutter/src/routing/routing.dart';
-import '../model/todo_dto.dart';
+import '../data/model/todo.dart';
 
 class TodosScreen extends ConsumerStatefulWidget {
   const TodosScreen({super.key});
@@ -15,7 +15,8 @@ class TodosScreen extends ConsumerStatefulWidget {
 
 class _TodosScreenState extends ConsumerState<TodosScreen> {
   final _searchTodosTextFieldController = TextEditingController();
-  final _todosPagingController = PagingController<int, Todo>(firstPageKey: 1);
+  final _todosPagingController =
+      PagingController<int, Todo>(firstPageKey: 1, invisibleItemsThreshold: 10);
   late final _todosControllerNotifier =
       ref.read(todosScreenControllerProvider.notifier);
   @override
@@ -80,8 +81,11 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
               onRefresh: () =>
                   _todosControllerNotifier.onActivatePullToRefresh(),
               child: PagedListView<int, Todo>.separated(
+                shrinkWrap: true,
                 pagingController: _todosPagingController,
                 builderDelegate: PagedChildBuilderDelegate<Todo>(
+                  animateTransitions: true,
+                  transitionDuration: Duration(milliseconds: 250),
                   itemBuilder: (context, todo, index) => ListTile(
                     onTap: () =>
                         ref.read(goRouterProvider).go("$todosRoute/${todo.id}"),

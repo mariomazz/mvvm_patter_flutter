@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:mvvm_patter_flutter/src/features/todos/application/todos_service.dart';
 import '../../../common/utils/search_limiter.dart';
-import '../model/todo_dto.dart';
+import '../data/model/todo.dart';
 part 'todos_screen_controller.g.dart';
 
 @Riverpod()
@@ -12,12 +12,12 @@ class TodosScreenController extends _$TodosScreenController {
 
   final _globalQueryParameters = <String, dynamic>{};
 
-  final _querySearchKey = "q";
-  final _querySortKey = "_sort";
-  final _queryOrderKey = "_order";
+  final _querySearchKey = "search";
+  final _querySortKey = "order";
+  final _queryOrderKey = "orderBy";
   // pagination
-  final _queryPageKey = "_page";
-  final _queryItemsPerPageKey = "_limit";
+  final _queryPageKey = "page";
+  final _queryItemsPerPageKey = "limit";
   final _todosTitleOrderKey = "title";
   final int _todosPaginationItemsPerPage = 10;
 
@@ -93,9 +93,8 @@ class TodosScreenController extends _$TodosScreenController {
   }
 
   void _initialize() async {
-    final s1 =
-        ref.listen(todosServiceProvider.select((value) => value.todos), (o, n) {
-      state = state.copyWith(todos: n);
+    final s1 = ref.listen(todosServiceProvider, (o, n) {
+      state = state.copyWith(todos: n.todos);
     });
     _subscriptions.addAll([s1]);
   }

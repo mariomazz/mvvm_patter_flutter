@@ -7,7 +7,7 @@ part of 'todo_screen_controller.dart';
 // **************************************************************************
 
 String _$todoScreenControllerHash() =>
-    r'59248c7806885f7d8f08c8ece641af79474cb1e2';
+    r'fe50507181a1b83518b9125c4aedfa58a1f8fea8';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -173,4 +173,4 @@ class _TodoScreenControllerProviderElement
   int get todoId => (origin as TodoScreenControllerProvider).todoId;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

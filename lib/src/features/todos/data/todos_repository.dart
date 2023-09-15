@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../common/widgets/constants.dart';
-import '../model/todo_dto.dart';
+import '../../../env/env.dart';
+import 'model/todo.dart';
 part 'todos_repository.g.dart';
 
 abstract class ITodosRepository {
@@ -36,7 +36,7 @@ class TodosRepository implements ITodosRepository {
 @Riverpod(keepAlive: true)
 ITodosRepository todosRepository(TodosRepositoryRef ref) {
   final baseOptions = BaseOptions(
-    baseUrl: jsonPlaceholderApiBaseUrl,
+    baseUrl: Env.mockapiUrl,
     connectTimeout: const Duration(seconds: 10),
     receiveTimeout: const Duration(seconds: 20),
   );

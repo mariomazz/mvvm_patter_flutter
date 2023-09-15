@@ -6,7 +6,7 @@ part of 'todos_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$todosRepositoryHash() => r'33302f97851da8623bf510f8f5db45ed6646e5fe';
+String _$todosRepositoryHash() => r'a59b908a61a7c55b2fd4189e69659516d718c5c7';
 
 /// See also [todosRepository].
 @ProviderFor(todosRepository)
@@ -22,4 +22,4 @@ final todosRepositoryProvider = Provider<ITodosRepository>.internal(
 
 typedef TodosRepositoryRef = ProviderRef<ITodosRepository>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

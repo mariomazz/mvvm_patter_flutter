@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:mvvm_patter_flutter/src/features/todos/application/todos_service.dart';
-import '../model/todo_dto.dart';
+
+import '../data/model/todo.dart';
 part 'todo_screen_controller.g.dart';
 
 @Riverpod()
@@ -21,9 +22,8 @@ class TodoScreenController extends _$TodoScreenController {
   }
 
   void _initialize() async {
-    final s1 =
-        ref.listen(todosServiceProvider.select((value) => value.todo), (o, n) {
-      state = state.copyWith(todo: n);
+    final s1 = ref.listen(todosServiceProvider, (o, n) {
+      state = state.copyWith(todo: n.todo);
     });
     _subscriptions.addAll([s1]);
   }

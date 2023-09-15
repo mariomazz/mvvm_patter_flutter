@@ -7,7 +7,7 @@ part of 'todos_screen_controller.dart';
 // **************************************************************************
 
 String _$todosScreenControllerHash() =>
-    r'de428495a8c9c074bcf00bd4261e30144002dc25';
+    r'2bd5d1c59d0444f615c39d88e42e7229c9faee5a';
 
 /// See also [TodosScreenController].
 @ProviderFor(TodosScreenController)
@@ -25,4 +25,4 @@ final todosScreenControllerProvider = AutoDisposeNotifierProvider<
 typedef _$TodosScreenController
     = AutoDisposeNotifier<TodosScreenControllerState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
