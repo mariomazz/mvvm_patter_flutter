@@ -43,6 +43,7 @@ dependencies:
   infinite_scroll_pagination: ^4.0.0
   shimmer: ^3.0.0
   envied: ^0.3.0+3
+  pull_to_refresh: ^2.0.0
 
 dev_dependencies:
   flutter_test:

@@ -4,6 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:mvvm_patter_flutter/src/features/todos/presentation/todos_screen_controller.dart';
 import 'package:mvvm_patter_flutter/src/routing/routes.dart';
 import 'package:mvvm_patter_flutter/src/routing/routing.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../data/model/todo.dart';
 
 class TodosScreen extends ConsumerStatefulWidget {
@@ -17,6 +18,7 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
   final _searchTodosTextFieldController = TextEditingController();
   final _todosPagingController =
       PagingController<int, Todo>(firstPageKey: 1, invisibleItemsThreshold: 10);
+  final _pullToRefreshController = RefreshController();
   late final _todosControllerNotifier =
       ref.read(todosScreenControllerProvider.notifier);
   @override
@@ -42,6 +44,7 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
     super.dispose();
     _searchTodosTextFieldController.dispose();
     _todosPagingController.dispose();
+    _pullToRefreshController.dispose();
   }
 
   @override
@@ -76,10 +79,18 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
               ),
             ],
           ),
+          SizedBox(height: 10, width: double.infinity),
           Expanded(
-            child: RefreshIndicator(
-              onRefresh: () =>
-                  _todosControllerNotifier.onActivatePullToRefresh(),
+            child: SmartRefresher(
+              enablePullDown: true,
+              header: WaterDropMaterialHeader(
+                backgroundColor: Theme.of(context).primaryColor,
+              ),
+              onRefresh: () async {
+                await _todosControllerNotifier.onActivatePullToRefresh();
+                _pullToRefreshController.refreshCompleted();
+              },
+              controller: _pullToRefreshController,
               child: PagedListView<int, Todo>.separated(
                 shrinkWrap: true,
                 pagingController: _todosPagingController,
@@ -95,7 +106,7 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
                     subtitle: Text("Completato : ${todo.completed}"),
                   ),
                 ),
-                separatorBuilder: (ctx, i) => const SizedBox.shrink(),
+                separatorBuilder: (ctx, i) => Divider(),
               ),
             ),
           ),
