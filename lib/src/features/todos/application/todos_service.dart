@@ -9,18 +9,37 @@ class TodosService extends _$TodosService {
   @override
   TodosServiceState build() => TodosServiceState.loading();
 
-  Future<void> loadTodos(
-      {Map<String, dynamic> queryParameters = const {}}) async {
+  Future<void> loadTodos({
+    int? paginationPage,
+    int? paginationItemsPerPage,
+    String? fullTextSearch,
+    bool? orderAscending,
+    String? orderKey,
+  }) async {
+    final query = <String, dynamic>{};
+    if (paginationPage != null) {
+      query.addAll({"page": paginationPage});
+    }
+    if (paginationItemsPerPage != null) {
+      query.addAll({"limit": paginationItemsPerPage});
+    }
+    if (fullTextSearch != null && fullTextSearch.isNotEmpty) {
+      query.addAll({"search": fullTextSearch});
+    }
+    if (orderAscending != null) {
+      query.addAll({"order": orderAscending ? "asc" : "desc"});
+    }
+    if (orderKey != null) {
+      query.addAll({"orderBy": orderKey});
+    }
     state = state.copyWith(
-        todos: await AsyncValue.guard(() async =>
-            await _repo.getTodos(queryParameters: queryParameters)));
+        todos: await AsyncValue.guard(
+            () async => await _repo.getTodos(queryParameters: query)));
   }
 
-  Future<void> loadTodo(int todoId,
-      {Map<String, dynamic> queryParameters = const {}}) async {
+  Future<void> loadTodo(int todoId) async {
     state = state.copyWith(
-        todo: await AsyncValue.guard(() async =>
-            await _repo.getTodo(todoId, queryParameters: queryParameters)));
+        todo: await AsyncValue.guard(() async => await _repo.getTodo(todoId)));
   }
 }
 

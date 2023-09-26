@@ -7,19 +7,11 @@ part 'todos_screen_controller.g.dart';
 
 @Riverpod()
 class TodosScreenController extends _$TodosScreenController {
-  late final _serviceNotifier = ref.watch(todosServiceProvider.notifier);
+  late final _serviceNotifier = ref.read(todosServiceProvider.notifier);
   final _subscriptions = <ProviderSubscription>[];
-
-  final _globalQueryParameters = <String, dynamic>{};
-
-  final _querySearchKey = "search";
-  final _querySortKey = "order";
-  final _queryOrderKey = "orderBy";
-  // pagination
-  final _queryPageKey = "page";
-  final _queryItemsPerPageKey = "limit";
-  final _todosTitleOrderKey = "title";
+  String? _searchValue;
   final int _todosPaginationItemsPerPage = 10;
+  final _todosTitleOrderKey = "title";
 
   void Function(Todos todos, int? nextKey) onPaginationTodos = (_, __) {};
   void Function() onPaginationRefresh = () {};
@@ -27,11 +19,7 @@ class TodosScreenController extends _$TodosScreenController {
 
   late final _todosSerchLimiter = SearchLimiter<void>(
     fetch: (text) async {
-      if (text.isNotEmpty) {
-        _globalQueryParameters.addAll({_querySearchKey: text});
-      } else {
-        _globalQueryParameters.remove(_querySearchKey);
-      }
+      _searchValue = text;
       return onPaginationRefresh();
     },
   );
@@ -49,21 +37,22 @@ class TodosScreenController extends _$TodosScreenController {
 
   void onOrderIconTap() async {
     state = state.copyWith(todosOrderAscending: !state.todosOrderAscending);
-    _globalQueryParameters.addAll({
-      _querySortKey: state.todosOrderAscending ? "asc" : "desc",
-      _queryOrderKey: _todosTitleOrderKey,
-    });
     onPaginationRefresh();
   }
 
   void onPaginationStart(int pageKey) async {
-    _globalQueryParameters.addAll({
-      _queryItemsPerPageKey: _todosPaginationItemsPerPage,
-      _queryPageKey: pageKey,
-    });
-
-    final asyncItems =
-        await _loadTodos(queryParameters: _globalQueryParameters);
+    final asyncItems = await _serviceNotifier
+        .loadTodos(
+          //pagination
+          paginationPage: pageKey,
+          paginationItemsPerPage: _todosPaginationItemsPerPage,
+          // search
+          fullTextSearch: _searchValue,
+          // ordering
+          orderKey: _todosTitleOrderKey,
+          orderAscending: state.todosOrderAscending,
+        )
+        .then((_) => state.todos);
 
     if (asyncItems.hasError) {
       return onError(asyncItems.error!);
@@ -83,13 +72,6 @@ class TodosScreenController extends _$TodosScreenController {
 
   Future<void> onActivatePullToRefresh() async {
     return await Future.sync(() => onPaginationRefresh());
-  }
-
-  Future<AsyncValue<Todos>> _loadTodos(
-      {Map<String, dynamic> queryParameters = const {}}) async {
-    return await _serviceNotifier
-        .loadTodos(queryParameters: queryParameters)
-        .then((_) => state.todos);
   }
 
   void _initialize() async {

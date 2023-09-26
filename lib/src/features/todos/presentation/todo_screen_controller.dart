@@ -13,12 +13,12 @@ class TodoScreenController extends _$TodoScreenController {
   TodoScreenControllerState build(int todoId) {
     _initialize();
     _disposing();
-    _service.loadTodo(todoId, queryParameters: {});
+    _service.loadTodo(todoId);
     return TodoScreenControllerState.loading();
   }
 
   void onTapRefreshTodoButton() {
-    _service.loadTodo(todoId, queryParameters: {});
+    _service.loadTodo(todoId);
   }
 
   void _initialize() async {
