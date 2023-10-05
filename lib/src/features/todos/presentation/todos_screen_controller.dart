@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:mvvm_patter_flutter/src/features/todos/application/todos_service.dart';
 import '../../../common/utils/search_limiter.dart';
+import '../../../routing/routes.dart';
+import '../../../routing/routing.dart';
 import '../data/model/todo.dart';
 part 'todos_screen_controller.g.dart';
 
@@ -11,7 +13,7 @@ class TodosScreenController extends _$TodosScreenController {
   final _subscriptions = <ProviderSubscription>[];
   String? _searchValue;
   final int _todosPaginationItemsPerPage = 10;
-  final _todosTitleOrderKey = "title";
+  final _todosTitleOrderKey = "id";
 
   void Function(Todos todos, int? nextKey) onPaginationTodos = (_, __) {};
   void Function() onPaginationRefresh = () {};
@@ -68,6 +70,10 @@ class TodosScreenController extends _$TodosScreenController {
       final nextPageKey = pageKey + 1;
       onPaginationTodos(items, nextPageKey);
     }
+  }
+
+  Future<void> goToTodoDetail(String todoId)async{
+     return await ref.read(goRouterProvider).push("$todosRoute/${todoId}").then((_){});
   }
 
   Future<void> onActivatePullToRefresh() async {
