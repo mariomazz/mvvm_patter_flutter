@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../features/profile/presentation/profile_screen.dart';
 import '../features/todos/presentation/todo_screen.dart';
 import '../features/todos/presentation/todos_screen.dart';
 import 'routes.dart';
@@ -33,6 +34,12 @@ GoRouter goRouter(GoRouterRef ref) {
             },
           ),
         ],
+      ),
+      GoRoute(
+        path: profileRoute,
+        pageBuilder: (ctx, state) {
+          return const MaterialPage(child: ProfileScreen());
+        },
       ),
     ],
   );

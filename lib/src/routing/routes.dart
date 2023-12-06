@@ -1,1 +1,2 @@
-const todosRoute = "/todos"; 
+const todosRoute = "/todos";
+const profileRoute = "/profile";

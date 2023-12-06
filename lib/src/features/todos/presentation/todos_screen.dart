@@ -22,7 +22,7 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
   @override
   void initState() {
     _todosControllerNotifier.onError = (err) {
-      _todosPagingController.error = err.toString();
+      _todosPagingController.error = err;
     };
     _todosControllerNotifier.onPaginationRefresh = () {
       _todosPagingController.refresh();
@@ -96,7 +96,8 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
                   animateTransitions: true,
                   transitionDuration: Duration(milliseconds: 250),
                   itemBuilder: (context, todo, index) => ListTile(
-                    onTap: () => _todosControllerNotifier.goToTodoDetail(todo.id),
+                    onTap: () =>
+                        _todosControllerNotifier.goToTodoDetail(todo.id),
                     leading: Text("Id ${todo.id}"),
                     title: Text("Titolo : ${todo.title}"),
                     trailing: Text("Id Utente : ${todo.userId}"),

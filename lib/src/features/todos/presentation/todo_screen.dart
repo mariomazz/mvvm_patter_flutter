@@ -12,6 +12,12 @@ class TodoScreen extends ConsumerStatefulWidget {
 
 class _TodoScreenState extends ConsumerState<TodoScreen> {
   late final todoController = (todoScreenControllerProvider(widget.todoId));
+  @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +46,9 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
             ),
           );
         },
-        error: (err, stacktrace) => Center(child: Text(err.toString())),
+        error: (err, stacktrace) {
+          return Center(child: Text(err.toString()));
+        },
         loading: () => const Center(child: CircularProgressIndicator()),
       ),
     );
