@@ -7,7 +7,7 @@ part of 'reload_profile_button_controller.dart';
 // **************************************************************************
 
 String _$reloadProfileButtonControllerHash() =>
-    r'cc151ca7e2e1f34a60af2ebd6e6eb44588a10fef';
+    r'93b126f4cfe8b56a60b4b4a4169cea5496d4187d';
 
 /// Copied from Dart SDK
 class _SystemHash {

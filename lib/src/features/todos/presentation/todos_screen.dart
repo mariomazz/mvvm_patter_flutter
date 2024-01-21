@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:mvvm_patter_flutter/src/features/todos/presentation/todos_screen_controller.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import '../../authentication/application/auth_service.dart';
 import '../data/model/todo.dart';
 
 class TodosScreen extends ConsumerStatefulWidget {
@@ -14,11 +15,9 @@ class TodosScreen extends ConsumerStatefulWidget {
 
 class _TodosScreenState extends ConsumerState<TodosScreen> {
   final _searchTodosTextFieldController = TextEditingController();
-  final _todosPagingController =
-      PagingController<int, Todo>(firstPageKey: 1, invisibleItemsThreshold: 10);
+  final _todosPagingController = PagingController<int, Todo>(firstPageKey: 1, invisibleItemsThreshold: 10);
   final _pullToRefreshController = RefreshController();
-  late final _todosControllerNotifier =
-      ref.read(todosScreenControllerProvider.notifier);
+  late final _todosControllerNotifier = ref.read(todosScreenControllerProvider.notifier);
   @override
   void initState() {
     _todosControllerNotifier.onError = (err) {
@@ -53,6 +52,14 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("todos"),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await ref.read(authServiceProvider).logout();
+            },
+            icon: Icon(Icons.logout),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -96,8 +103,7 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
                   animateTransitions: true,
                   transitionDuration: Duration(milliseconds: 250),
                   itemBuilder: (context, todo, index) => ListTile(
-                    onTap: () =>
-                        _todosControllerNotifier.goToTodoDetail(todo.id),
+                    onTap: () => _todosControllerNotifier.goToTodoDetail(todo.id),
                     leading: Text("Id ${todo.id}"),
                     title: Text("Titolo : ${todo.title}"),
                     trailing: Text("Id Utente : ${todo.userId}"),

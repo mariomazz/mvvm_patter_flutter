@@ -1,6 +1,9 @@
+import 'package:asf_flutter_common/asf_flutter_common.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mvvm_patter_flutter/src/features/authentication/application/auth_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../features/authentication/presentation/no_auth_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
 import '../features/todos/presentation/todo_screen.dart';
 import '../features/todos/presentation/todos_screen.dart';
@@ -9,7 +12,9 @@ part 'routing.g.dart';
 
 @Riverpod(keepAlive: true)
 GoRouter goRouter(GoRouterRef ref) {
+  final authService = ref.read(authServiceProvider);
   return GoRouter(
+    refreshListenable: GoRouterRefreshStream(streams: [authService.onChangeIsAuth()]),
     initialLocation: todosRoute,
     routes: [
       GoRoute(
@@ -41,6 +46,23 @@ GoRouter goRouter(GoRouterRef ref) {
           return const MaterialPage(child: ProfileScreen());
         },
       ),
+      GoRoute(
+        path: authRoute,
+        pageBuilder: (ctx, state) {
+          return const MaterialPage(child: NoAuthScreen());
+        },
+      ),
     ],
+    redirect: (ctx, state) async {
+      final isAuth = authService.isAuth;
+
+      if (!isAuth && state.matchedLocation != authRoute) {
+        return authRoute;
+      } else if (isAuth && state.matchedLocation == authRoute) {
+        return todosRoute;
+      }
+
+      return null;
+    },
   );
 }
