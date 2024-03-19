@@ -5,7 +5,7 @@ import 'auth_repository_interface.dart';
 class AuthRepositoryMock implements IAuthRepository {
   @override
   Future<AuthData?> loadSession() async {
-    return null;
+    return AuthData(accessToken: faker.jwt.custom(expiresIn: DateTime.now().add(Duration(days: 1)), payload: {}));
   }
 
   @override

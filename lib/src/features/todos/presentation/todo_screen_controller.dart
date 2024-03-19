@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:mvvm_patter_flutter/src/features/todos/application/todos_service.dart';
-
 import '../data/model/todo.dart';
 part 'todo_screen_controller.g.dart';
 
