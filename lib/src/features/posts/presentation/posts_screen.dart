@@ -9,7 +9,7 @@ class PostsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.watch(postsScreenControllerProvider.notifier);
+    final viewModel = ref.read(postsScreenControllerProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
